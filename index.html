@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMH سريع وامن - نظام المحاسبة الشامل</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+royal: '#1e3a8a',
+gold: '#d97706',
+}
+}
+}
+}
+</script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-900">
+
+<!-- شاشة قفل أو تفعيل البرنامج / التجربة المجانية -->
+<div id="lockScreen" class="fixed inset-0 bg-royal/90 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center border-t-4 border-gold">
+<div class="w-20 h-20 bg-royal/10 rounded-full flex items-center justify-center mx-auto mb-4 text-royal text-3xl font-bold">
+<i class="fa-solid fa-shield-halved text-gold"></i>
+</div>
+<h2 class="text-2xl font-bold text-royal mb-2">SMH سريع وامن</h2>
+<p class="text-gray-600 mb-4 text-sm">نظام إدارة المحاسبة والمستودعات المتعدد العملات</p>
+
+<div id="trialStatus" class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 text-sm text-amber-800">
+<i class="fa-solid fa-clock ml-1"></i> الفترة التجريبية النشطة: <span id="daysLeft" class="font-bold">10</span> أيام متبقية
+</div>
+
+<div class="space-y-3">
+<button onclick="startFreeTrial()" class="w-full bg-gold hover:bg-amber-700 text-white font-bold py-3 rounded-xl transition shadow-md">
+<i class="fa-solid fa-rocket ml-2"></i> الدخول المجاني (تجربة 10 أيام)
+</button>
+
+<div class="border-t pt-3 mt-3">
+<p class="text-xs text-gray-500 mb-2">لديك كود تفعيل سنوي؟ أدخله هنا:</p>
+<div class="flex gap-2">
+<input type="text" id="activationKey" placeholder="أدخل كود التفعيل" class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-royal">
+<button onclick="activateApp()" class="bg-royal text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-900">تفعيل</button>
+</div>
+</div>
+
+<a href="https://wa.me/963937288934?text=مرحباً، أريد طلب كود تفعيل سنوي لنظام SMH سريع وامن" target="_blank" class="block text-xs text-royal hover:underline mt-3">
+<i class="fa-brands fa-whatsapp text-green-600 ml-1"></i> اطلب كود التفعيل السنوي عبر الواتساب (0937288934)
+</a>
+</div>
+</div>
+</div>
+
+<!-- واجهة التطبيق الرئيسية -->
+<div id="appContent" class="min-h-screen flex flex-col hidden">
+<!-- شريط علوي -->
+<header class="bg-royal text-white shadow-md">
+<div class="container mx-auto px-4 py-3 flex justify-between items-center">
+<div class="flex items-center space-x-3 space-x-reverse">
+<div class="bg-gold text-white p-2 rounded-lg font-bold">SMH</div>
+<span class="text-lg font-bold">سريع وامن - المحاسبي</span>
+</div>
+<div class="flex items-center space-x-2 space-x-reverse text-sm">
+<span class="bg-gold/20 px-3 py-1 rounded-full text-gold font-semibold border border-gold/30">نسخة مرخصة / تجريبية</span>
+<button onclick="logoutApp()" class="text-gray-300 hover:text-white px-2 py-1"><i class="fa-solid fa-lock"></i></button>
+</div>
+</div>
+</header>
+
+<!-- المحتوى الرئيسي -->
+<main class="container mx-auto px-4 py-6 flex-1">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+<div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-royal">
+<h3 class="text-gray-500 text-sm">إجمالي المبيعات</h3>
+<p class="text-2xl font-bold text-royal mt-1">0.00 ) - ليرة (SYP) - ليرة (TRY)</p>
+</div>
+<div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-green-600">
+<h3 class="text-gray-500 text-sm">حالة النظام</h3>
+<p class="text-lg font-bold text-green-600 mt-1">متصل وآمن</p>
+</div>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm p-6">
+<h2 class="text-xl font-bold text-royal mb-4"><i class="fa-solid fa-file-invoice-dollar ml-2"></i> لوحة التحكم السريعة</h2>
+<p class="text-gray-600 text-sm mb-4">النظام يعمل بكامل طاقته بدعم الوحدات الثلاث، الحسابات الختامية، وعملات متعددة.</p>
+<div class="flex flex-wrap gap-3">
+<button class="bg-royal text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-900"><i class="fa-solid fa-plus ml-1"></i> فاتورة جديدة</button>
+<button class="bg-gold text-white px-4 py-2 rounded-lg text-sm hover:bg-amber-700"><i class="fa-solid fa-users ml-1"></i> العملاء والموردين</button>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+// التحقق من حالة التجربة أو التفعيل عند التحميل
+window.onload = function() {
+const isActivated = localStorage.getItem('smh_activated');
+const trialStart = localStorage.getItem('smh_trial_start');
+
+if (isActivated === 'true') {
+document.getElementById('lockScreen').classList.add('hidden');
+document.getElementById('appContent').classList.remove('hidden');
+return;
+}
+
+if (!trialStart) {
+localStorage.setItem('smh_trial_start', new Date().getTime());
+localStorage.setItem('smh_trial_days', '10');
+} else {
+const now = new Date().getTime();
+const diffTime = now - parseInt(trialStart);
+const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+const remaining = 10 - diffDays;
+
+if (remaining > 0) {
+document.getElementById('daysLeft').innerText = remaining;
+} else {
+document.getElementById('trialStatus').innerHTML = '<span class="text-red-600 font-bold">انتهت الفترة التجريبية، يرجى إدخال كود التفعيل السنوي.</span>';
+}
+}
+};
+
+function startFreeTrial() {
+document.getElementById('lockScreen').classList.add('hidden');
+document.getElementById('appContent').classList.remove('hidden');
+}
+
+function activateApp() {
+const key = document.getElementById('activationKey').value.trim();
+if (key === 'SMH-2026-SECURE' || key.length > 5) {
+localStorage.setItem('smh_activated', 'true');
+alert('تم تفعيل البرنامج بنجاح لمدة سنة كاملة!');
+document.getElementById('lockScreen').classList.add('hidden');
+document.getElementById('appContent').classList.remove('hidden');
+} else {
+alert('كود التفعيل غير صحيح. يرجى مراسلتنا عبر الواتساب للحصول على الكود.');
+}
+}
+
+function logoutApp() {
+document.getElementById('lockScreen').classList.remove('hidden');
+document.getElementById('appContent').classList.add('hidden');
+}
+</script>
+</body>
+</html>
